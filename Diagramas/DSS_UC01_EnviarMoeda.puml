@@ -1,0 +1,21 @@
+@startuml
+participant ":Professor" as Professor
+participant ":Sistema" as Sistema
+
+Professor -> Sistema: enviarMoeda(professorId, alunoId, valor, motivo)
+activate Sistema
+Sistema -> Sistema: **[Pré-condições]**
+Sistema -> Sistema: 1. Verifica se Professor e Aluno são ativos.
+Sistema -> Sistema: 2. Verifica se valor > 0.
+Sistema -> Sistema: 3. Verifica saldo do Professor (se aplicável).
+alt Pré-condições atendidas
+  Sistema -> Sistema: 1. Decrementa saldo do Professor (se aplicável).
+  Sistema -> Sistema: 2. Incrementa saldo do Aluno.
+  Sistema -> Sistema: 3. Registra nova Transaction (ENVIO_PROFESSOR_ALUNO).
+  Sistema -> Sistema: 4. Gera e envia Notification ao Aluno.
+  Sistema --> Professor: Confirmação de envio
+else Pré-condições não atendidas
+  Sistema --> Professor: Mensagem de erro
+end
+deactivate Sistema
+@enduml

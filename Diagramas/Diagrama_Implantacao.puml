@@ -1,0 +1,22 @@
+@startuml
+node "Servidor Web (Cloud)" as Server {
+  component "Frontend (Nginx/Apache)" as WebServer
+  component "Backend (Node.js/Express)" as AppServer
+}
+
+node "Servidor de Banco de Dados" as DBServer {
+  database "Banco de Dados (PostgreSQL)" as DB
+}
+
+node "Servidor de E-mail" as MailServer {
+  component "Serviço de E-mail (SMTP)" as Email
+}
+
+actor "Usuário (Browser)" as User
+
+User --> WebServer : HTTP/HTTPS
+WebServer --> AppServer : API Calls (Interno)
+AppServer --> DB : JDBC/ODBC (Prisma ORM)
+AppServer --> Email : SMTP
+
+@enduml

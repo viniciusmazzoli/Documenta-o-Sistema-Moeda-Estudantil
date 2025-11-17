@@ -1,0 +1,22 @@
+@startuml
+participant ":Aluno" as Aluno
+participant ":Sistema" as Sistema
+
+Aluno -> Sistema: resgatarVantagem(alunoId, vantagemId)
+activate Sistema
+Sistema -> Sistema: **[Pré-condições]**
+Sistema -> Sistema: 1. Verifica se Aluno é ativo.
+Sistema -> Sistema: 2. Verifica se Vantagem está disponível.
+Sistema -> Sistema: 3. Verifica se Aluno tem saldo suficiente.
+alt Pré-condições atendidas
+  Sistema -> Sistema: 1. Decrementa saldo do Aluno (custo da Vantagem).
+  Sistema -> Sistema: 2. Registra nova Transaction (RESGATE_VANTAGEM).
+  Sistema -> Sistema: 3. Gera Redemption (cupom único) com status GERADO.
+  Sistema -> Sistema: 4. Envia cupom ao Aluno por e-mail.
+  Sistema -> Sistema: 5. Envia Notification à Empresa Parceira sobre o resgate.
+  Sistema --> Aluno: Confirmação de resgate e cupom
+else Pré-condições não atendidas
+  Sistema --> Aluno: Mensagem de erro (ex: saldo insuficiente)
+end
+deactivate Sistema
+@enduml

@@ -1,0 +1,27 @@
+@startuml
+package "Sistema de Moeda Estudantil" {
+  component "Frontend (React/TS)" as Frontend
+  component "Backend (Node.js/Express)" as Backend
+  component "Banco de Dados (PostgreSQL)" as DB
+  component "Serviço de E-mail (SMTP)" as Email
+}
+
+Frontend --> Backend : Requisições REST/HTTP
+Backend --> DB : Consultas (via Prisma ORM)
+Backend --> Email : Envio de Notificações
+
+note right of Frontend
+  Interface do Usuário (View)
+  - AlunoDashboard
+  - ProfessorDashboard
+  - PartnerDashboard
+end note
+
+note right of Backend
+  Lógica de Negócio (Controller/Model)
+  - Autenticação
+  - Transações de Moeda
+  - Gerenciamento de Vantagens
+end note
+
+@enduml

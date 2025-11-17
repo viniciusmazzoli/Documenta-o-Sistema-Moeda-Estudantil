@@ -1,0 +1,11 @@
+@startuml
+state Resgate {
+  [*] --> GERADO : Resgate realizado (UC-02)
+
+  GERADO --> UTILIZADO : Cupom validado (UC-04)
+  GERADO --> EXPIRADO : Prazo de validade excedido
+
+  UTILIZADO --> [*]
+  EXPIRADO --> [*]
+}
+@enduml

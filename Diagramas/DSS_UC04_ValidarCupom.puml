@@ -1,0 +1,19 @@
+@startuml
+participant ":Empresa Parceira" as Parceiro
+participant ":Sistema" as Sistema
+
+Parceiro -> Sistema: validarCupom(empresaId, codigoCupom)
+activate Sistema
+Sistema -> Sistema: **[Pré-condições]**
+Sistema -> Sistema: 1. Verifica se Empresa Parceira é ativa.
+Sistema -> Sistema: 2. Busca Redemption pelo `codigoCupom`.
+Sistema -> Sistema: 3. Verifica se o cupom existe e está no status GERADO.
+alt Pré-condições atendidas
+  Sistema -> Sistema: 1. Altera o status do Redemption para UTILIZADO.
+  Sistema -> Sistema: 2. Registra confirmação de validação.
+  Sistema --> Parceiro: Confirmação de validação (Cupom Utilizado)
+else Cupom não encontrado ou já utilizado/expirado
+  Sistema --> Parceiro: Mensagem de erro (Cupom Inválido/Expirado)
+end
+deactivate Sistema
+@enduml

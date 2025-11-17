@@ -1,0 +1,121 @@
+@startuml
+hide methods
+hide circle
+
+' Enums
+enum Role {
+  ALUNO
+  PROFESSOR
+  PARCEIRO
+  ADMIN
+}
+
+enum TransactionType {
+  CREDITO_PROFESSOR
+  ENVIO_PROFESSOR_ALUNO
+  RESGATE_ALUNO
+  RESGATE_VANTAGEM
+}
+
+enum RedemptionStatus {
+  GERADO
+  UTILIZADO
+  EXPIRADO
+}
+
+' Classes
+class User {
+  + id: Int
+  + role: Role
+  + active: Boolean
+  + name: String
+  + email: String
+  + passwordHash: String?
+  + cpf: String?
+  + cnpj: String?
+  + createdAt: DateTime
+  --
+  + account: Account?
+  + rewards: Reward[]
+  + redemptions: Redemption[]
+  + notifications: Notification[]
+}
+
+class Account {
+  + id: Int
+  + userId: Int
+  + balance: Int
+  --
+  + user: User
+  + outgoingTransactions: Transaction[]
+  + incomingTransactions: Transaction[]
+}
+
+class Transaction {
+  + id: Int
+  + type: TransactionType
+  + fromAccountId: Int?
+  + toAccountId: Int?
+  + amount: Int
+  + description: String
+  + couponCode: String?
+  + createdAt: DateTime
+  --
+  + fromAccount: Account?
+  + toAccount: Account?
+}
+
+class Reward {
+  + id: Int
+  + partnerId: Int
+  + title: String
+  + description: String
+  + cost: Int
+  + imageUrl: String?
+  + active: Boolean
+  + createdAt: DateTime
+  --
+  + partner: User
+  + redemptions: Redemption[]
+}
+
+class Redemption {
+  + id: Int
+  + rewardId: Int
+  + studentId: Int
+  + code: String
+  + status: RedemptionStatus
+  + createdAt: DateTime
+  --
+  + reward: Reward
+  + student: User
+}
+
+class Notification {
+  + id: Int
+  + userId: Int
+  + title: String
+  + message: String
+  + read: Boolean
+  + createdAt: DateTime
+  --
+  + user: User
+}
+
+' Relacionamentos
+User "1" -- "0..1" Account : possui >
+User "1" -- "0..*" Reward : <<PartnerRewards>> cadastra
+User "1" -- "0..*" Redemption : <<StudentRedemptions>> realiza
+User "1" -- "0..*" Notification : recebe
+
+Account "1" -- "0..*" Transaction : <<FromAccount>> envia
+Account "1" -- "0..*" Transaction : <<ToAccount>> recebe
+
+Reward "1" -- "0..*" Redemption : é resgatada em >
+
+Redemption "1" -- "1" Reward
+Redemption "1" -- "1" User
+
+Notification "1" -- "1" User
+
+@enduml

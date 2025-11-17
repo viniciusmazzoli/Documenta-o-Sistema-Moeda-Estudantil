@@ -1,0 +1,23 @@
+@startuml
+actor Professor
+participant "1: Interface" as UI
+participant "2: Controller" as Controller
+participant "3: Service" as Service
+participant "4: Account Model" as Account
+participant "5: Transaction Model" as Transaction
+participant "6: Notification Service" as NotifService
+
+Professor -> UI : 1: enviarMoeda(aluno, valor, motivo)
+UI -> Controller : 2: handleEnvioMoeda(aluno, valor, motivo)
+Controller -> Service : 3: transferirMoeda(professorId, alunoId, valor, motivo)
+Service -> Account : 4: buscarContas(professorId, alunoId)
+Account --> Service : Contas do Professor e Aluno
+Service -> Account : 5: debitar(professor, valor)
+Service -> Account : 6: creditar(aluno, valor)
+Service -> Transaction : 7: registrarTransacao(debitar, creditar, valor, motivo)
+Service -> NotifService : 8: notificarAluno(aluno, motivo)
+NotifService --> Service : Confirmação de notificação
+Service --> Controller : Sucesso
+Controller --> UI : Sucesso
+UI --> Professor : Confirmação de envio
+@enduml
